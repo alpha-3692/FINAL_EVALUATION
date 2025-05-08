@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanIt - Your Task Management Solution</title>
+    <style>
+        :root {
+            --primary-color: #1a1a1d;
+            --secondary-color: #4e4e50;
+            --accent-color: #6f2232;
+            --text-color: #ffffff;
+            --background-color: #f4f4f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 200vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            width: 100%;
+            z-index: 100000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #navwaladiv2 > a {
+            text-decoration: none;
+            color: white;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        #navwaladiv {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav #navwaladiv > div {
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav #navwaladiv > div > a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        nav #navwaladiv > div > a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: -100%;
+            background-color: var(--accent-color);
+            transition: left 0.3s ease;
+        }
+
+        nav #navwaladiv > div > a:hover {
+            color: khaki;
+            text-shadow: 0 0 10px khaki;
+        }
+
+        nav #navwaladiv > div > a:hover::after {
+            left: 0;
+        }
+
+        button#signup {
+            background-color: #ffffff;
+            color: black;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button#signup > a {
+            text-decoration: none;
+            color: black;
+        }
+
+        button#signup:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        button#signup:hover a {
+            color: #ffffff;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger .line {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-color);
+            margin: 4px 0;
+            transition: all 0.3s ease;
+        }
+
+        #img1 {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        main {
+            padding: 80px 20px 40px;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .content-section:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Enhanced Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 3rem 1rem;
+            margin-top: auto;
+            bottom: 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            padding: 1rem;
+        }
+
+        .footer-section h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Style for the welcome message */
+        .welcome-message {
+            color: var(--accent-color);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.2rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            #navwaladiv {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: var(--primary-color);
+                position: absolute;
+                top: 60px;
+                left: 0;
+                padding: 1rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+            #navwaladiv.active {
+                display: flex;
+            }
+
+            nav #navwaladiv > div {
+                margin: 0.5rem 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    {% block style %}
+
+    {% endblock %}
+</head>
+<body>
+    <nav>
+        <div id="navwaladiv2">
+            <a href="{% url 'home' %}">
+                <img id="img1" src="https://th.bing.com/th/id/OIG3.u5mqxoqk0uawuVs8M8bg?pid=ImgGn" alt="">
+                PlanIt
+            </a>
+        </div>
+        <div class="hamburger" onclick="toggleNav()">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <div id="navwaladiv">
+            <div class="welcome-message" style="background-color: #0a1445; border-radius: 10px; padding: 15px;color: white; box-shadow: 5px 5px 0.5px rgba(48, 84, 192, 0.192);">{{current_user.username}}</div>
+            <div><a href="{% url 'home' %}">Home</a></div>
+            <div><a href="#footer">About</a></div>
+            {% if current_user.is_authenticated %}
+            <div><a href="{% url 'dashboard' %}">Dashboard</a></div>
+            <div><a href="{% url 'payment' %}">payment</a></div>
+            <div><a href="{% url 'home' %}">Logout</a></div>
+
+            {% else %}
+
+            <div><button id="signup"><a href="{% url 'signup' %}">Register/Login</a></button></div>
+            {% endif %}
+        </div>
+    </nav>
+    {% block container %}
+    <main>
+        <section class="content-section">
+            <h1>Welcome to PlanIt</h1>
+            <p>Streamline your productivity with our intuitive task management solution. Create, organize, and track your tasks with ease. Stay on top of your goals and never miss a deadline again.</p>
+        </section>
+    </main>
+    {% endblock %}
+
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About PlanIt</h3>
+                <p>PlanIt is your ultimate task management solution, designed to help individuals and teams stay organized and productive. Our platform combines simplicity with powerful features to make task management effortless.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Features</h3>
+                <ul>
+                    <li>Task Creation and Organization</li>
+                    <li>Priority Management</li>
+                    <li>Due Date Tracking</li>
+                    <li>Progress Monitoring</li>
+                    <li>Team Collaboration</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Getting Started</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: support@PlanIt.com</p>
+                <p>Phone: (555) 123-4567</p>
+                <p>Address: 123 Productivity Lane, Organization City, TS 12345</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 PlanIt. All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleNav() {
+            var nav = document.getElementById('navwaladiv');
+            nav.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

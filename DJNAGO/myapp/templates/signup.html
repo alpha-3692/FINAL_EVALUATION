@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskLy | Login/Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --text-dark: #333;
+            --text-light: #f8f9fa;
+            --bg-light: #f8f9fa;
+            --bg-dark: #212529;
+            --border: #dee2e6;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            background: #fff;
+            position: relative;
+        }
+
+        .logo {
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .toggle-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .toggle-buttons button {
+            flex: 1;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 16px 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #6c757d;
+            position: relative;
+        }
+
+        .toggle-buttons button.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .toggle-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            width: 50%;
+            background: var(--primary);
+            transition: var(--transition);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .forms-container {
+            padding: 30px;
+        }
+
+        form {
+            display: none;
+        }
+
+        form.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            color: #6c757d;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        input::placeholder {
+            color: #adb5bd;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error i {
+            margin-right: 6px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn i {
+            font-size: 1.2rem;
+        }
+
+        .social-btn.google i {
+            color: #DB4437;
+        }
+
+        .social-btn.facebook i {
+            color: #4267B2;
+        }
+
+        .social-btn.apple i {
+            color: #000;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember input {
+            margin-right: 5px;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                border-radius: 12px;
+            }
+            
+            .forms-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-tasks"></i>
+                <h1>TaskLy</h1>
+                <p>Streamline your workflow</p>
+            </div>
+        </div>
+        
+        <div class="toggle-buttons">
+            <button id="show-login" class="active">Login</button>
+            <button id="show-signup">Sign Up</button>
+            <div class="toggle-indicator" style="left: 0;"></div>
+        </div>
+        
+        <div class="forms-container">
+            <!-- Login Form -->
+            <form id="login-form" action="/login/" method="post" class="active">
+                {% csrf_token %}
+                {% if login_error %}
+                    <div class="error"><i class="fas fa-exclamation-circle"></i>{{ login_error }}</div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Username or Email" required>
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                
+                <div class="remember-forgot">
+                    <div class="remember">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+                
+                <button type="submit">Login</button>
+                
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+                
+                <div class="social-buttons">
+                    <button type="button" class="social-btn google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button type="button" class="social-btn facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button type="button" class="social-btn apple">
+                        <i class="fab fa-apple"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" action="/register/" method="post">
+                {% csrf_token %}
+                {% if signup_error %}
+                    <div class="error"><i class="fas fa-exclamation-circle"></i>{{ signup_error }}</div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                </div>
+                
+                <button type="submit">Create Account</button>
+                
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+                
+                <div class="social-buttons">
+                    <button type="button" class="social-btn google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button type="button" class="social-btn facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button type="button" class="social-btn apple">
+                        <i class="fab fa-apple"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div class="footer">
+                <p>By continuing, you agree to TaskLy's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginBtn = document.getElementById('show-login');
+        const signupBtn = document.getElementById('show-signup');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const toggleIndicator = document.querySelector('.toggle-indicator');
+        
+        loginBtn.addEventListener('click', () => {
+            loginBtn.classList.add('active');
+            signupBtn.classList.remove('active');
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            toggleIndicator.style.left = '0';
+        });
+        
+        signupBtn.addEventListener('click', () => {
+            signupBtn.classList.add('active');
+            loginBtn.classList.remove('active');
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+            toggleIndicator.style.left = '50%';
+        });
+    </script>
+</body>
+</html>

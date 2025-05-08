@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskLy - Projects</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f9fafb;
+            --dark: #111827;
+            --gray-light: #e5e7eb;
+            --gray: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: var(--dark);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--secondary);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .logo-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 1.5rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .notification {
+            background-color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 0.75rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Projects Page Styles */
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .projects-filters {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .filter-dropdown {
+            background-color: white;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Projects Layout */
+        .projects-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .project-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-client {
+            color: var(--gray);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .project-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-ongoing {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+        }
+
+        .status-completed {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-paused {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-cancelled {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .project-body {
+            padding: 1.5rem;
+        }
+
+        .project-description {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .project-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--secondary);
+        }
+
+        .progress-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: var(--gray-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .project-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-team {
+            display: flex;
+            align-items: center;
+        }
+
+        .team-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--gray);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-left: -8px;
+            border: 2px solid white;
+        }
+
+        .team-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .team-avatar.more {
+            background-color: var(--gray-light);
+            color: var(--secondary);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background-color: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-icon:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Sidebar Widgets */
+        .sidebar-widget {
+            background-color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-title a {
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .widget-title a:hover {
+            text-decoration: underline;
+        }
+
+        .status-chart {
+            margin-bottom: 1rem;
+        }
+
+        .status-legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 0.5rem;
+        }
+
+        .color-ongoing {
+            background-color: var(--accent);
+        }
+
+        .color-completed {
+            background-color: var(--success);
+        }
+
+        .color-paused {
+            background-color: var(--warning);
+        }
+
+        .color-cancelled {
+            background-color: var(--danger);
+        }
+
+        /* Project List */
+        .project-list {
+            list-style: none;
+        }
+
+        .project-list-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .project-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .project-list-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 0.75rem;
+        }
+
+        .project-list-info {
+            flex: 1;
+        }
+
+        .project-list-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .project-list-subtitle {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .task-project {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .task-due {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .overdue {
+            color: var(--danger);
+        }
+
+        /* Activity Feed */
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            position: relative;
+        }
+
+        .activity-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 28px;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--gray-light);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-user {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .activity-description {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-project {
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            margin: 10vh auto;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
+        .project-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .save-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .save-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .projects-container {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-sidebar {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">TL</div>
+                <span>TaskLy</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="{% url 'dashboard' %}" class="nav-link">
+                        <i>📊</i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'tasks' %}" class="nav-link">
+                        <i>📝</i> Tasks
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'calendar' %}" class="nav-link">
+                        <i>📅</i> Calendar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'projects' %}" class="nav-link active">
+                        <i>📁</i> Projects
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'home' %}" class="nav-link">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+
+
+               
+            </div>
+
+            <!-- Page Header -->
+            <div>
+                <h1 class="page-title">Projects</h1>
+                <p class="page-description">Manage and track your team's projects and tasks</p>
+            </div>
+
+            <!-- Projects Controls -->
+            <div class="projects-header">
+                <div class="projects-filters">
+                    <div class="filter-dropdown" id="statusFilter">
+                        <span>Status: </span>
+                        <strong>All</strong>
+                        <i>▼</i>
+                    </div>
+                    <div class="filter-dropdown" id="sortFilter">
+                        <span>Sort by: </span>
+                        <strong>Last Updated</strong>
+                        <i>▼</i>
+                    </div>
+                </div>
+
+                <button class="action-btn" id="addProjectBtn">
+                    <span>+</span>
+                    New Project
+                </button>
+            </div>
+
+            <!-- Projects Content -->
+            <div class="projects-container">
+                <!-- Projects Grid -->
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Project Cards will be inserted here dynamically -->
+                </div>
+
+                <!-- Sidebar Widgets -->
+               
+            </div>
+        </main>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Project</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form id="projectForm" class="project-form">
+                <div class="form-group">
+                    <label class="form-label" for="projectTitle">Project Title</label>
+                    <input type="text" id="projectTitle" class="form-control" placeholder="Enter project title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectClient">Client</label>
+                    <input type="text" id="projectClient" class="form-control" placeholder="Enter client name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectStatus">Status</label>
+                    <select id="projectStatus" class="form-control" required>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                        <option value="paused">Paused</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectStartDate">Start Date</label>
+                    <input type="date" id="projectStartDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectDueDate">Due Date</label>
+                    <input type="date" id="projectDueDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectBudget">Budget</label>
+                    <input type="number" id="projectBudget" class="form-control" placeholder="Enter budget" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectDescription">Description</label>
+                    <textarea id="projectDescription" class="form-control" placeholder="Enter project description" required></textarea>
+                </div>
+                <button type="submit" class="save-btn">Save Project</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const projectsGrid = document.getElementById('projectsGrid');
+        const activityFeed = document.getElementById('activityFeed');
+        const addProjectBtn = document.getElementById('addProjectBtn');
+        const projectModal = document.getElementById('projectModal');
+        const closeBtn = document.querySelector('.close-btn');
+        const projectForm = document.getElementById('projectForm');
+        const statusFilter = document.getElementById('statusFilter');
+        const sortFilter = document.getElementById('sortFilter');
+        const modalTitle = document.getElementById('modalTitle');
+
+        // Data
+        let projects = JSON.parse(localStorage.getItem('projects')) || [
+            {
+                id: 1,
+                title: 'Website Redesign',
+                client: 'Acme Corporation',
+                status: 'ongoing',
+                startDate: '2025-04-12',
+                dueDate: '2025-06-30',
+                budget: 12500,
+                description: 'Redesign the company website with improved UI/UX and mobile responsiveness.',
+                progress: 65,
+                team: ['JD', 'AS', 'ML']
+            },
+            {
+                id: 2,
+                title: 'Mobile App Development',
+                client: 'TechStart Inc.',
+                status: 'ongoing',
+                startDate: '2025-03-05',
+                dueDate: '2025-08-15',
+                budget: 45000,
+                description: 'Develop a cross-platform mobile application for customer engagement and sales.',
+                progress: 35,
+                team: ['JD', 'RK', 'LC']
+            },
+            {
+                id: 3,
+                title: 'Marketing Campaign',
+                client: 'GreenLife Products',
+                status: 'completed',
+                startDate: '2025-02-15',
+                dueDate: '2025-04-30',
+                budget: 18750,
+                description: 'Plan and execute a multi-channel marketing campaign for new product launch.',
+                progress: 100,
+                team: ['ML', 'LC', 'AS']
+            }
+        ];
+
+        let editingProject = null;
+
+        // Functions
+        function renderProjects() {
+            projectsGrid.innerHTML = '';
+            projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                projectCard.innerHTML = `
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">${project.title}</h3>
+                            <div class="project-client">
+                                <span>🏢</span>
+                                ${project.client}
+                            </div>
+                        </div>
+                        <div class="project-status status-${project.status.toLowerCase()}">${project.status.charAt(0).toUpperCase() + project.status.slice(1)}</div>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">${project.description}</p>
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Start Date</span>
+                                <span class="meta-value">${new Date(project.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Due Date</span>
+                                <span class="meta-value">${new Date(project.dueDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Budget</span>
+                                <span class="meta-value">$${project.budget.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="project-progress">
+                            <div class="progress-header">
+                                <span class="progress-label">Progress</span>
+                                <span class="progress-value">${project.progress}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${project.progress}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <div class="project-team">
+                            ${project.team.map(member => `<div class="team-avatar" style="background-color: var(--primary);">${member}</div>`).join('')}
+                            <div class="team-avatar more">+${project.team.length - 3}</div>
+                        </div>
+                        <div class="project-actions">
+                            <div class="action-icon" onclick="editProject(${project.id})">✏️</div>
+                            <div class="action-icon" onclick="deleteProject(${project.id})">🗑️</div>
+                        </div>
+                    </div>
+                `;
+                projectsGrid.appendChild(projectCard);
+            });
+        }
+
+        function renderActivityFeed() {
+            activityFeed.innerHTML = '';
+            const activities = [
+                { user: 'John Doe', action: 'created a new project', project: 'Website Redesign', time: '10 min ago' },
+                { user: 'Alex Smith', action: 'updated the project', project: 'Mobile App Development', time: '2 hours ago' },
+                { user: 'Maria Lopez', action: 'completed the project', project: 'Marketing Campaign', time: '1 day ago' }
+            ];
+            activities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-icon">
+                        <span>${activity.user.charAt(0)}${activity.user.charAt(1)}</span>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-header">
+                            <span class="activity-user">${activity.user}</span>
+                            <span class="activity-time">${activity.time}</span>
+                        </div>
+                        <div class="activity-description">
+                            ${activity.user} ${activity.action} <strong>${activity.project}</strong>.
+                        </div>
+                        <div class="activity-project">
+                            <span>🏢</span>
+                            ${activity.project}
+                        </div>
+                    </div>
+                `;
+                activityFeed.appendChild(activityItem);
+            });
+        }
+
+        function openModal(title = 'Add New Project') {
+            modalTitle.textContent = title;
+            projectModal.style.display = 'block';
+            projectForm.reset();
+            editingProject = null;
+        }
+
+        function closeModal() {
+            projectModal.style.display = 'none';
+        }
+
+        function handleProjectFormSubmit(event) {
+            event.preventDefault();
+            const title = document.getElementById('projectTitle').value;
+            const client = document.getElementById('projectClient').value;
+            const status = document.getElementById('projectStatus').value;
+            const startDate = document.getElementById('projectStartDate').value;
+            const dueDate = document.getElementById('projectDueDate').value;
+            const budget = document.getElementById('projectBudget').value;
+            const description = document.getElementById('projectDescription').value;
+
+            const newProject = {
+                id: editingProject ? editingProject.id : Date.now(),
+                title,
+                client,
+                status,
+                startDate,
+                dueDate,
+                budget: parseFloat(budget),
+                description,
+                progress: 0,
+                team: ['JD'] // Default team member
+            };
+
+            if (editingProject) {
+                // Update existing project
+                const index = projects.findIndex(project => project.id === editingProject.id);
+                projects[index] = newProject;
+            } else {
+                // Add new project
+                projects.push(newProject);
+            }
+
+            localStorage.setItem('projects', JSON.stringify(projects));
+            closeModal();
+            renderProjects();
+        }
+
+        function editProject(id) {
+            editingProject = projects.find(project => project.id === id);
+            if (editingProject) {
+                document.getElementById('projectTitle').value = editingProject.title;
+                document.getElementById('projectClient').value = editingProject.client;
+                document.getElementById('projectStatus').value = editingProject.status;
+                document.getElementById('projectStartDate').value = editingProject.startDate;
+                document.getElementById('projectDueDate').value = editingProject.dueDate;
+                document.getElementById('projectBudget').value = editingProject.budget;
+                document.getElementById('projectDescription').value = editingProject.description;
+                openModal('Edit Project');
+            }
+        }
+
+        function deleteProject(id) {
+            if (confirm('Are you sure you want to delete this project?')) {
+                projects = projects.filter(project => project.id !== id);
+                localStorage.setItem('projects', JSON.stringify(projects));
+                renderProjects();
+            }
+        }
+
+        // Event Listeners
+        addProjectBtn.addEventListener('click', () => openModal());
+        closeBtn.addEventListener('click', closeModal);
+        projectForm.addEventListener('submit', handleProjectFormSubmit);
+
+        // Initial Render
+        renderProjects();
+        renderActivityFeed();
+
+        // Chart Initialization
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        const statusData = {
+            labels: ['Ongoing', 'Completed', 'Paused', 'Cancelled'],
+            datasets: [{
+                label: 'Project Status',
+                data: [2, 1, 0, 0], // Example data
+                backgroundColor: ['rgba(59, 130, 246, 0.2)', 'rgba(34, 197, 94, 0.2)', 'rgba(245, 158, 11, 0.2)', 'rgba(239, 68, 68, 0.2)'],
+                borderColor: ['rgba(59, 130, 246, 1)', 'rgba(34, 197, 94, 1)', 'rgba(245, 158, 11, 1)', 'rgba(239, 68, 68, 1)'],
+                borderWidth: 2,
+                borderRadius: 4,
+                tension: 0.4
+            }]
+        };
+        const options = {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10,
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        };
+        new Chart(ctx, {
+            type: 'bar',
+            data: statusData,
+            options: options
+        });
+    </script>
+</body>
+</html>

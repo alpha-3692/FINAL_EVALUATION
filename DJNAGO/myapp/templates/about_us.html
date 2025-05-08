@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskly - About Us</title>
+    <!-- <link rel="icon" type="image/png" href="./images/favicon.png"> -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            padding-top: 76px;
+        }
+
+        :root {
+            --primary-color: #1cb9e9c9;
+            --secondary-color: #808080;
+            --bg-dark: #25295d;
+            --bg-darker: #160234;
+            --text-primary: #ffffff;
+            --text-secondary: #808080;
+        }
+
+        .home_link:hover {
+            color: white;
+        }
+
+        nav {
+            background-color: var(--bg-darker) !important;
+            border-bottom: 1px solid #333;
+        }
+
+        .navbar-link {
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-link:hover {
+            color: var(--text-primary);
+        }
+
+        .navbar-link.active {
+            color: white !important;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .navbar-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .search-box {
+            background-color: var(--bg-darker);
+            border: 1px solid #333;
+            color: var(--text-primary);
+        }
+
+        .primary-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(227, 73, 53, 0.2);
+        }
+
+        .nav-logo {
+            color: var(--text-primary);
+        }
+
+        .back-button {
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            margin-right: 16px;
+            padding: 0;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--hover-bg);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-button:hover {
+            color: var(--text-color);
+        }
+
+        .back-button:hover::before {
+            transform: scale(1);
+        }
+
+        .back-button:active::before {
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .back-button i {
+            font-size: 22px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .about-header {
+            text-align: center;
+            margin: 2rem 0 4rem;
+            position: relative;
+        }
+
+        .about-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #0d4bf7 0%, #FF8F7D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 0 2rem;
+        }
+
+        .team-member {
+            background: linear-gradient(145deg, #054d8c, #1f1f1f);
+            border-radius: 16px;
+            padding: 2rem;
+            width: calc(33.333% - 2rem);
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 48px rgba(227, 73, 53, 0.2);
+        }
+
+        .member-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 4px solid #d4bdba;
+            box-shadow: 0 4px 16px rgba(227, 73, 53, 0.3);
+        }
+
+        .team-member h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .member-role {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .member-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            color: white;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+
+        .linkedin {
+            background-color: #0077b5;
+        }
+
+        .github {
+            background-color: #333;
+        }
+
+        .resume {
+            background-color: #4285F4;
+        }
+
+        @media (max-width: 992px) {
+            .team-members {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .team-member {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <button class="back-button" onclick="goBack()" aria-label="Go back">
+                <i class="ri-arrow-left-line"></i>
+            </button>
+            <a class="navbar-brand nav-logo d-flex align-items-center home_link" href="{% url 'home' %}">
+
+                <span class="fw-bold">Taskly</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link navbar-link" href="{% url 'about_us2' %}">&#127773;</a></li>
+                        <li class="nav-item"><a class="nav-link navbar-link" href="{% url 'features' %}">Features</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link navbar-link" href=_Premium.html">Premium</a></li> -->
+                        <li class="nav-item"><a class="nav-link navbar-link" href="{% url 'business' %}">Business</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link navbar-link" href="pricing.html">Pricing</a></li> -->
+                        <li class="nav-item"><a class="nav-link navbar-link" href="{% url 'about_us' %}">About Us</a></li>
+                    </ul>
+            
+                    <a href="{% url 'signup' %}" class="btn navbar-link">Log in</a>
+                <a href="{% url 'signup' %}" class="btn primary-button ms-2">Start for Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="about-header">
+            <h1>Meet Our Team</h1>
+        </div>
+
+        <div class="team-members">
+            <div class="team-member">
+                <img src="https://cdn.pixabay.com/photo/2024/03/27/16/06/ai-generated-8659385_1280.jpg"
+                    alt="Team Member 1" class="member-image">
+                <h2>Mohit</h2>
+                <p class="member-role">Technical Lead</p>
+                <p class="member-description">Mohit is a visionary software developer with vast experience in
+                    productivity software. He co-founded Taskly with the goal of making task management simple and
+                    efficient for everyone.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/rahul-bathla-691937331" class="social-icon linkedin"
+                        target="_blank">
+                        <i class="ri-linkedin-fill"></i>
+                    </a>
+                    <a href="https://github.com/rahulbathla3314" class="social-icon github" target="_blank">
+                        <i class="ri-github-fill"></i>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1rAicRmnP8B0_NPON1b9lzPPJKF14r0Hw/view?usp=sharing"
+                        class="social-icon resume" target="_blank" title="View Resume">
+                        <i class="ri-file-text-line"></i>
+                    </a>
+                </div>
+            </div>
+            
+
+            <div class="team-member">
+                <img src="https://i.pinimg.com/736x/0d/72/62/0d7262c6331581b747aea5e70a343fa2.jpg" alt="Team Member 2"
+                    class="member-image">
+                <h2>Aditya</h2>
+                <p class="member-role">Team Lead</p>
+                <p class="member-description">Aditya is a talented developer with a passion for creating intuitive user
+                    interfaces. He leads our development team in building robust and user-friendly features for Taskly
+                </p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/rachit-goyal-1a4403301" class="social-icon linkedin"
+                        target="_blank">
+                        <i class="ri-linkedin-fill"></i>
+                    </a>
+                    <a href="https://github.com/rachitgoyal3313" class="social-icon github" target="_blank">
+                        <i class="ri-github-fill"></i>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1TEdx_vAYBS0WrY-Q0tzQYLVOIQw9RiMf/view?usp=sharing"
+                        class="social-icon resume" target="_blank" title="View Resume">
+                        <i class="ri-file-text-line"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="https://cdn.pixabay.com/photo/2024/03/27/16/06/ai-generated-8659385_1280.jpg"
+                    alt="Team Member 1" class="member-image">
+                <h2>Hardik Chawla</h2>
+                <p class="member-role">Java Lead</p>
+                <p class="member-description">Hardik Chawla is a visionary software developer with vast experience in
+                    productivity software. He co-founded Taskly with the goal of making task management simple and
+                    efficient for everyone.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/rahul-bathla-691937331" class="social-icon linkedin"
+                        target="_blank">
+                        <i class="ri-linkedin-fill"></i>
+                    </a>
+                    <a href="https://github.com/rahulbathla3314" class="social-icon github" target="_blank">
+                        <i class="ri-github-fill"></i>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1rAicRmnP8B0_NPON1b9lzPPJKF14r0Hw/view?usp=sharing"
+                        class="social-icon resume" target="_blank" title="View Resume">
+                        <i class="ri-file-text-line"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOJWFwfzndBtCEsAHsZ_bwkC7pO6MmaVBJeQ&s"
+                    alt="Team Member 3" class="member-image">
+                <h2>Ishan</h2>
+                <p class="member-role">UI/UX Lead</p>
+                <p class="member-description">Ishan brings creativity and user-centered design principles to Taskly.
+                    With his innovative approach, he consistently delivers intuitive that enhance user experience.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/rahul-goyal-2703932b6/" class="social-icon linkedin"
+                        target="_blank">
+                        <i class="ri-linkedin-fill"></i>
+                    </a>
+                    <a href="https://github.com/rahulgoyal001" class="social-icon github" target="_blank">
+                        <i class="ri-github-fill"></i>
+                    </a>
+                    <a href="https://drive.google.com/file/d/1t6sln3tRQXOLIvtCSZD2NbkqJ4N_5tno/view?usp=sharing"
+                        class="social-icon resume" target="_blank" title="View Resume">
+                        <i class="ri-file-text-line"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        document.querySelector('.back-button').addEventListener('click', goBack);
+    </script>
+</body>
+
+</html>

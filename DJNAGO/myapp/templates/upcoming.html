@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="icon" type="image/png" href="./images/favicon.png"> -->
+    <title>Taskly</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Lato:100&display=swap');
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            height: 100%;
+            background-color: #1f1f1f;
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #282828;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-item {
+            padding: 1px 0;
+            color: #ffffffb3;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background-color: #363636;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f06a6a;
+            margin-right: 10px;
+            margin-top: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .user-avatar img:hover {
+            transform: scale(1.1);
+        }
+
+        .user-name {
+            flex-grow: 1;
+            font-size: large;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+        }
+
+        .icons {
+            display: flex;
+            gap: 10px;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .icon-1 {
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.2s ease;
+        }
+
+        .icon-1:hover {
+            transform: scale(1.1);
+        }
+
+        .add-task {
+            background-color: #db4c3f;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .add-task:hover {
+            background-color: #c53727;
+            transform: translateY(-2px);
+        }
+
+        .add-task-icon {
+            margin-right: 5px;
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 1;
+            text-align: center;
+        }
+
+        .menu-item {
+            padding: 8px 10px;
+            margin-bottom: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background-color: #2c2c2c;
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background-color: #363636;
+        }
+
+        .menu-icon {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .menu-text {
+            flex-grow: 1;
+        }
+
+        .menu-count {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 0.8em;
+            transition: background-color 0.2s ease;
+        }
+
+        .menu-item:hover .menu-count {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            padding-left: 10px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #363636;
+            color: #9a9a9a;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, transform 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .back-button:hover {
+            background-color: #454545;
+            color: #ffffff;
+            transform: translateX(-5px);
+        }
+
+        .back-button svg {
+            margin-right: 5px;
+            transition: transform 0.2s;
+        }
+
+        .back-button:hover svg {
+            transform: translateX(-3px);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .month-selector select {
+            background-color: #1f1f1f;
+            color: #ffffff;
+            border: none;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .month-selector select:hover {
+            background-color: #2c2c2c;
+        }
+
+        .today-nav {
+            display: flex;
+            align-items: center;
+            background-color: #363636;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .today-nav button {
+            background: none;
+            border: none;
+            color: #9a9a9a;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .today-nav button:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .today-nav span {
+            color: #ffffff;
+            padding: 0 10px;
+        }
+
+        .week-view {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #363636;
+            padding-bottom: 10px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .week-day {
+            text-align: center;
+            color: #9a9a9a;
+            transition: transform 0.2s ease;
+        }
+
+        .week-day:hover {
+            transform: translateY(-5px);
+        }
+
+        .current-day {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .current-day .date {
+            background-color: #db4c3f;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: transform 0.2s ease;
+        }
+
+        .current-day .date:hover {
+            transform: scale(1.1);
+        }
+
+        .day-tasks {
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .day-header {
+            color: #9a9a9a;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .add-task-link {
+            color: #db4c3f;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .add-task-link:hover {
+            color: #c53727;
+            transform: translateX(5px);
+        }
+
+        .add-task-link:before {
+            content: '+ ';
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1001;
+            background-color: #db4c3f;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .menu-toggle:hover {
+            background-color: #c53727;
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1002;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #282828;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            color: #9a9a9a;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .close:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-form input,
+        .task-form select {
+            background-color: #363636;
+            border: 1px solid #454545;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .task-form input:focus,
+        .task-form select:focus {
+            border-color: #db4c3f;
+            box-shadow: 0 0 0 2px rgba(219, 76, 63, 0.2);
+            outline: none;
+        }
+
+        .task-form input[type="date"] {
+            color-scheme: dark;
+        }
+
+        .save-task {
+            background-color: #db4c3f;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .save-task:hover {
+            background-color: #c53727;
+            transform: translateY(-2px);
+        }
+
+        .task-item {
+            background-color: #363636;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-item .task-title {
+            font-weight: 500;
+        }
+
+        .task-item .task-details {
+            font-size: 0.9em;
+            color: #9a9a9a;
+        }
+
+        .delete-task {
+            color: #9a9a9a;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .delete-task:hover {
+            color: #db4c3f;
+            transform: scale(1.1);
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                width: 100%;
+            }
+        }
+
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+        }
+
+        .login-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            z-index: 2001;
+        }
+
+        .login-popup h2 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .login-popup p {
+            margin-bottom: 20px;
+            color: #9a9a9a;
+        }
+
+        .login-btn {
+            background-color: #db4c3f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #e05e52;
+        }
+
+        .logout-button {
+            margin-top: auto;
+            background-color: #363636;
+            color: #9a9a9a;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #454545;
+            color: #ffffff;
+        }
+
+        .logout-icon {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+  
+    <button class="menu-toggle">☰</button>
+    <div class="container">
+        <div class="sidebar">
+            <button class="back-button" onclick="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Back
+            </button>
+            <!-- <a href="user_profile.html"> -->
+                <div class="user-info">
+                    <!-- <div class="user-avatar"><img src="images/naruto2.jpeg" alt="Naruto"></div> -->
+                    <span class="user-name">mohit</span>
+                    <!-- <div class="icons">
+
+                        <span class="icon-1">🔔</span>
+                        <span class="icon-1">⚙</span>
+                    </div> -->
+                </div>
+            <!-- </a> -->
+            <button class="add-task">
+                <span class="add-task-icon">+</span>
+                Add task
+            </button>
+            <a href="{% url 'inbox' %}" class="sidebar-item">
+                <div class="menu-item">
+                    <span class="menu-icon">📥</span>
+                    <span class="menu-text">Inbox</span>
+                    <!-- <span class="menu-count">4</span> -->
+                </div>
+            </a>
+            <a href="{% url 'dashboard' %}" class="sidebar-item">
+                <div class="menu-item active">
+                    <span class="menu-icon">📅</span>
+                    <span class="menu-text">Today</span>
+                    <!-- <span class="menu-count">3</span> -->
+                </div>
+            </a>
+            <a href="{% url 'upcoming' %}" class="sidebar-item">
+                <div class="menu-item">
+                    <span class="menu-icon">📆</span>
+                    <span class="menu-text">Upcoming</span>
+                </div>
+            </a>
+
+
+            <div class="section-title">My Projects</div>
+            <a href="{% url 'home2' %}" class="sidebar-item">
+                <div class="menu-item project">
+                    <!-- <span class="menu-icon">#</span> -->
+                    <span class="menu-text">Home 🏠</span>
+                    <!-- <span class="menu-count">4</span> -->
+                </div>
+            </a>
+            <a href="{% url 'my_work' %}" class="sidebar-item">
+                <div class="menu-item project">
+                    <!-- <span class="menu-icon">#</span> -->
+                    <span class="menu-text">My work 🎯</span>
+                    <!-- <span class="menu-count">5</span> -->
+                </div>
+            </a>
+            <a href="{% url 'education' %}" class="sidebar-item">
+                <div class="menu-item project">
+                    <!-- <span class="menu-icon">#</span> -->
+                    <span class="menu-text">Education 📚</span>
+                    <!-- <span class="menu-count">3</span> -->
+                </div>
+            </a>
+            <button class="logout-button" onclick="logout()">
+                <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Logout
+            </button>
+        </div>
+
+        <main class="main-content">
+            <h1>Upcoming</h1>
+            <div class="month-selector">
+                <select id="month-select"></select>
+                <div class="today-nav">
+                    <button id="prev-day">&lt;</button>
+                    <span>Today</span>
+                    <button id="next-day">&gt;</button>
+                </div>
+            </div>
+            <div class="week-view" id="week-view"></div>
+            <div id="tasks-container"></div>
+        </main>
+    </div>
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Task</h2>
+            <form id="taskForm" class="task-form">
+                <input type="text" id="taskTitle" placeholder="Task title" required>
+                <input type="date" id="taskDate" required>
+                <select id="taskPriority" required>
+                    <option value="">Select Priority</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <select id="taskReminder" required>
+                    <option value="">Select Reminder</option>
+                    <option value="text">Text</option>
+                    <option value="mail">Mail</option>
+                    <option value="call">Call</option>
+                </select>
+                <select id="taskProject" required>
+                    <option value="">Select Project</option>
+                    <option value="education">Education</option>
+                    <option value="inbox">Inbox</option>
+                    <option value="home">Home</option>
+                    <option value="work">Work</option>
+                </select>
+                <button type="submit" class="save-task">Save Task</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const monthSelect = document.getElementById('month-select');
+        const weekView = document.getElementById('week-view');
+        const tasksContainer = document.getElementById('tasks-container');
+        const prevDayBtn = document.getElementById('prev-day');
+        const nextDayBtn = document.getElementById('next-day');
+        const modal = document.getElementById('taskModal');
+        const addTaskBtn = document.querySelector('.add-task');
+        const closeBtn = document.querySelector('.close');
+        const taskForm = document.getElementById('taskForm');
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let currentDate = new Date();
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        function loadUserName() {
+            const userName = localStorage.getItem('currentUserName');
+            const userNameElement = document.querySelector('.user-name');
+            if (userName) {
+                userNameElement.textContent = userName;
+            } else {
+                userNameElement.textContent = 'Guest User';
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                document.getElementById('loginOverlay').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        window.addEventListener('load', () => {
+            // Check if the page has already been reloaded
+            const hasReloaded = localStorage.getItem('hasReloaded');
+
+            if (!hasReloaded) {
+                // Set the flag in localStorage
+                localStorage.setItem('hasReloaded', 'true');
+
+                // Reload the page
+                location.reload();
+            } else {
+                // Remove the flag to allow reloading next time the user visits
+                localStorage.removeItem('hasReloaded');
+            }
+        });
+
+        function redirectToLogin() {
+            window.location.href = 'auth.html';
+        }
+
+
+        function updateMonthSelect() {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            monthSelect.innerHTML = months.map((month, index) =>
+                `<option value="${index}" ${currentDate.getMonth() === index ? 'selected' : ''}>${month} ${currentDate.getFullYear()}</option>`
+            ).join('');
+        }
+
+        function updateWeekView() {
+            const weekStart = new Date(currentDate);
+            weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+
+            weekView.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(weekStart);
+                day.setDate(weekStart.getDate() + i);
+                const isToday = day.toDateString() === new Date().toDateString();
+
+                const dayElement = document.createElement('div');
+                dayElement.className = `week-day ${isToday ? 'current-day' : ''}`;
+                dayElement.innerHTML = `
+                    <div>${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getDay()]}</div>
+                    <div class="date">${day.getDate()}</div>
+                `;
+                weekView.appendChild(dayElement);
+            }
+        }
+        document.querySelector('.logout-button').addEventListener('click', function () {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUserName');
+
+            window.location.href = '{% url 'home' %}';
+        });
+
+        function updateTasksList() {
+            tasksContainer.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(currentDate);
+                day.setDate(currentDate.getDate() + i);
+
+                const dayTasks = document.createElement('div');
+                dayTasks.className = 'day-tasks';
+                const dateFormatted = day.toISOString().split('T')[0];
+
+                const tasksForDay = tasks.filter(task => task.date === dateFormatted);
+                const tasksHTML = tasksForDay.map(task => `
+                    <div class="task-item">
+                        <div>
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-details">
+                                Priority: ${task.priority} | Reminder: ${task.reminder} | Project: ${task.project}
+                            </div>
+                        </div>
+                        <span class="delete-task" onclick="deleteTask(${task.id})">×</span>
+                    </div>
+                `).join('');
+
+                dayTasks.innerHTML = `
+                    <div class="day-header">${day.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
+                    ${tasksHTML}
+                    <div class="add-task-link">Add task</div>
+                `;
+
+                dayTasks.querySelector('.add-task-link').addEventListener('click', () => {
+                    openModal(day);
+                });
+
+                tasksContainer.appendChild(dayTasks);
+            }
+        }
+
+        function updateView() {
+            updateMonthSelect();
+            updateWeekView();
+            updateTasksList();
+        }
+
+        monthSelect.addEventListener('change', (e) => {
+            currentDate.setMonth(e.target.value);
+            updateView();
+        });
+
+        prevDayBtn.addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateView();
+        });
+
+        nextDayBtn.addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateView();
+        });
+
+        function openModal(selectedDate) {
+            modal.style.display = 'block';
+            document.getElementById('taskDate').valueAsDate = selectedDate || new Date();
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            taskForm.reset();
+        }
+
+        function addTask(e) {
+            e.preventDefault();
+            const task = {
+                id: Date.now(),
+                title: document.getElementById('taskTitle').value,
+                date: document.getElementById('taskDate').value,
+                priority: document.getElementById('taskPriority').value,
+                reminder: document.getElementById('taskReminder').value,
+                project: document.getElementById('taskProject').value
+            };
+            tasks.push(task);
+            saveTasks();
+            closeModal();
+            updateTasksList();
+        }
+
+        function deleteTask(taskId) {
+            tasks = tasks.filter(task => task.id !== taskId);
+            saveTasks();
+            updateTasksList();
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        addTaskBtn.addEventListener('click', () => openModal());
+        closeBtn.addEventListener('click', closeModal);
+        taskForm.addEventListener('submit', addTask);
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            updateView();
+            loadUserName();
+            checkLoginStatus();
+        });
+
+        updateView();
+    </script>
+</body>
+
+</html>
